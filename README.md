@@ -1,6 +1,7 @@
-##Aruco Intel Realsense t265
+# Aruco_odom
+## Aruco Intel Realsense t265
 Данный модуль для ROS, проверенн и работает на симуляторе версии 0.3 в Ubuntu 18.04. Позволит вам на основе данных одонометрии с камеры Intel Realsense t265 координироваться на основе карты с аруко маркерами использую пакет [clover](https://github.com/CopterExpress/clover) и [odom_tf2](https://github.com/Elur12/odom_tf2)
-##Установка
+## Установка
 Загрузите и установите пакет
 ```bash
 cd ~/catkin_ws/src
@@ -15,9 +16,9 @@ sourse ~/.bashrc
 
 Добавьте эти строки в файл [clover.launch](https://github.com/CopterExpress/clover/blob/master/clover/launch/clover.launch)
 ```bash
-	<node name="aruco_tf2_1" pkg="aruco_odom" type="aruco_tf2.py" respawn="false" output="screen" >
+<node name="aruco_tf2_1" pkg="aruco_odom" type="aruco_tf2.py" respawn="false" output="screen" >
         <param name="num" type = "string" value="1"/>
-        <param name="map_file" type = "string" value="/home/clover/catkin_ws/src/aruco_odom/nodes/C4S_map.txt/C4S_map.txt"/>
+        <param name="map_file" type = "string" value="/home/clover/catkin_ws/src/aruco_odom/nodes/C4S_map.txt"/>
         <param name="fx" type = "string" value="285.222808837891"/>
         <param name="fy" type = "string" value="285.393310546875"/>
         <param name="ppx" type = "string" value="424.528411865234"/>
@@ -29,7 +30,7 @@ sourse ~/.bashrc
     </node>
     <node name="aruco_tf2_2" pkg="aruco_odom" type="aruco_tf2.py" respawn="false" output="screen" >
         <param name="num" type = "string" value="2"/>
-        <param name="map_file" type = "string" value="/home/clover/catkin_ws/src/aruco_odom/nodes/C4S_map.txt/C4S_map.txt"/>
+        <param name="map_file" type = "string" value="/home/clover/catkin_ws/src/aruco_odom/nodes/C4S_map.txt"/>
         <param name="fx" type = "string" value="285.219696044922"/>
         <param name="fy" type = "string" value="285.371307373047"/>
         <param name="ppx" type = "string" value="426.107391357422"/>
@@ -42,10 +43,10 @@ sourse ~/.bashrc
     <node name="odom_and_aruco" pkg="aruco_odom" type="odom_and_aruco.py" respawn="false" output="screen"/>
 ```
 
-##Использование
+## Использование
 Пакет добавляет новый frame_id. Если указать "aruco_odom_map" в параметр frame_id. То позиционирование дрона будет осуществляться на основе топика /camera/odom/sample и данных с камер /camera/fisheye1 и /camera/fisheye2 по карте маркеров. 
 Для использования обязательно находиться над полем. Проверить распознаны ли все маркеры можно в топиках /aruco_tf2_1/debug_camera_1 и /aruco_tf2_2/debug_camera_2
-##Примеры использования
+## Примеры использования
 1. В коде
 ```bash
 import rospy
@@ -61,5 +62,5 @@ navigate(x=0.5, y=0.5, z=1.5, frame_id='aruco_odom_map', auto_arm=True)
 rosservice call /navigate "{x: 0.5, y: 0.5, z: 1.0, yaw: 0.0, yaw_rate: 0.0, speed: 0.0, frame_id: 'aruco_odom_map', auto_arm: true}" 
 ```
 
-##Настройка
+## Настройка
 Для установки файла карты аруко, поместите его в любое место и в файле [clover.launch](https://github.com/CopterExpress/clover/blob/master/clover/launch/clover.launch) в ДВУХ местах укаите путь к файлу.
