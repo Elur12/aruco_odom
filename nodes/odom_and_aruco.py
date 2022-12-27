@@ -9,6 +9,8 @@ import geometry_msgs.msg
 
 from tf2_msgs.msg import TFMessage
 
+oldTime = 0
+valFrame = 0
 
 camera1_offset_x = None
 camera2_offset_x = None
@@ -18,7 +20,7 @@ camera1_offset_z = None
 camera2_offset_z = None
 
 def handle_body_pose(msg):
-
+    global oldTime, valFrame
     if(camera1_offset_x != None and camera1_offset_y  != None and camera1_offset_z != None and camera2_offset_x != None and camera2_offset_y != None and camera2_offset_z != None):
         br = tf2_ros.TransformBroadcaster()
         t = geometry_msgs.msg.TransformStamped()
@@ -36,6 +38,11 @@ def handle_body_pose(msg):
         t.transform.rotation.w = 1
 
         br.sendTransform(t)
+        valFrame += 1
+        if(int(rospy.Time.now().secs - oldTime) >= 20):
+            print("FPS:" ,valFrame/int(rospy.Time.now().secs - oldTime))
+            valFrame = 0
+            oldTime = int(rospy.Time.now().secs)
 
 def handle_odom_pose(msg):
         

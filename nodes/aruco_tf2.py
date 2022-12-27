@@ -33,16 +33,19 @@ def image_callback(data):
 	
 	if len(corners) > 0:
 		for i in range(0, len(ids)):
-			rvec, tvec = cv2.aruco.estimatePoseSingleMarkers(corners[i], 0.25, intrinsic_camera, distortion)
+			try:
+				rvec, tvec = cv2.aruco.estimatePoseSingleMarkers(corners[i], 0.25, intrinsic_camera, distortion)
 
-			cv2.aruco.drawDetectedMarkers(cv_image, corners)
-			#print(tvec)
-			g = open_map.geto(ids[i], rospy.get_param('~map_file'))
+				cv2.aruco.drawDetectedMarkers(cv_image, corners)
+				#print(tvec)
+				g = open_map.geto(ids[i], rospy.get_param('~map_file'))
 
-			pose_centry[0] += tvec[0][0][0] + g[3]
-			pose_centry[1] += tvec[0][0][1] + g[2]
-			pose_centry[2] += g[4]
-			#cv2.aruco.drawAxis(cv_image, intrinsic_camera, distortion, rvec, np.array((tvec[0][0][0] + g[3], tvec[0][0][1] + g[2], tvec[0][0][2])), 0.2)
+				pose_centry[0] += tvec[0][0][0] + g[3]
+				pose_centry[1] += tvec[0][0][1] + g[2]
+				pose_centry[2] += g[4]
+				#cv2.aruco.drawAxis(cv_image, intrinsic_camera, distortion, rvec, np.array((tvec[0][0][0] + g[3], tvec[0][0][1] + g[2], tvec[0][0][2])), 0.2)
+			except:
+				continue
 		pose_centry[0] = pose_centry[0]/len(ids)
 		pose_centry[1] = pose_centry[1]/len(ids)
 		pose_centry[2] = pose_centry[2]/len(ids)
@@ -85,6 +88,6 @@ if __name__ == '__main__':
 
 	image_sub = rospy.Subscriber(imagetopic, Image, image_callback)
 
-
+	print("CV2 version:", cv2.__version__)
 
 	rospy.spin()
